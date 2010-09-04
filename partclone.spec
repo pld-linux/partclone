@@ -38,6 +38,7 @@ sed -e 's|ncurses.h|ncurses/ncurses.h|' -i configure.ac -i src/{partclone,progre
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+export LIBS=-ltinfo
 %configure \
 	--enable-extfs \
 	--enable-hfsp \
