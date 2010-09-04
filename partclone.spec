@@ -5,7 +5,7 @@ Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	29376e209ee6e2fb1534d16f0ae83fb4
+# Source0-md5:	73f85b96f8377227ea9e2e8d5f0173fe
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
