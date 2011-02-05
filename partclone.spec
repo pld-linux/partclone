@@ -34,6 +34,10 @@ sed -e 's|gcc -static|gcc|' -i configure.ac
 #sed -e 's|libxfs.h|xfs.h|' -i configure.ac -i src/xfsclone.[ch]
 sed -e 's|ncurses.h|ncurses/ncurses.h|' -i configure.ac -i src/{partclone,progress}.c
 
+mv po/fr_FR.gmo po/fr.gmo
+mv po/fr_FR.po po/fr.po
+sed -i 's/fr_FR/fr/' po/LINGUAS
+
 %build
 %{__aclocal}
 %{__autoconf}
