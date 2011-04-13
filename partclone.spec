@@ -1,11 +1,11 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.2.20
+Version:	0.2.22
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	df611937c2f52c44817a9e667ff68acf
+# Source0-md5:	f9f76d6e491f67e2114f5c98f3e4321e
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
