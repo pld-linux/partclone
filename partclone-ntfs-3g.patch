@@ -1,0 +1,122 @@
+diff -Nur partclone-0.2.24_/configure.ac partclone-0.2.24/configure.ac
+--- partclone-0.2.24_/configure.ac	2011-05-24 02:47:18.000000000 +0000
++++ partclone-0.2.24/configure.ac	2011-07-24 14:47:27.028818054 +0000
+@@ -250,40 +250,6 @@
+ AM_CONDITIONAL(ENABLE_NTFS, test "$enable_ntfs" = yes)
+ 
+ if test "$enable_ntfs" = "yes"; then
+-#check library of some filesystems
+-
+-dnl Check for NTFS 
+-AC_CHECKING([ for NTFS Library and Header files ... ])
+-AC_CHECK_HEADERS([ntfs/version.h], ,
+-   AC_MSG_ERROR([*** NTFS(ntfsprog) header not found]))
+-AC_CHECK_LIB([ntfs], [ntfs_mount], true,
+-   AC_MSG_ERROR([*** ntfs depend library (libntfs) not found]))
+-AC_MSG_CHECKING(version of libntfs)
+-ntfs_version=`gcc -static  $srcdir/src/deplib_version.c -o $srcdir/get_lib_version -lntfs -DNTFS`
+-ntfs_version=`$srcdir/get_lib_version ntfs | cut -d':' -f1`
+-ntfs_version_major=`$srcdir/get_lib_version ntfs | cut -d':' -f2`
+-ntfs_version_minor=`$srcdir/get_lib_version ntfs | cut -d':' -f3`
+-if test -z "$ntfs_version"; then
+-    ntfs_version="?"
+-    ntfs_version_major="?"
+-    ntfs_version_minor="?"
+-    ntfs_version="$ntfs_version:$ntfs_version_major:$ntfs_version_minor; bad"
+-    AC_MSG_RESULT($ntfs_version)
+-    AC_MSG_ERROR(Please check your libntfs!)
+-fi
+-
+-if test $ntfs_version -lt 9 ; then
+-ntfs_version="$ntfs_version:$ntfs_version_major:$ntfs_version_minor; bad"
+-AC_MSG_RESULT($ntfs_version)
+-AC_MSG_ERROR(Please upgrade your libntfs to 9:0:0 or newer version!)
+-elif test $ntfs_version -eq 9 ; then
+-ntfs_version="$ntfs_version:$ntfs_version_major:$ntfs_version_minor; suggest you upgrade the library!"
+-AC_MSG_RESULT($ntfs_version)
+-else
+-ntfs_version="$ntfs_version:$ntfs_version_major:$ntfs_version_minor; ok!"
+-AC_MSG_RESULT($ntfs_version)
+-fi
+-
+ supported_fs=$supported_fs" ntfs"
+ fi
+ #end of check ntfs
+diff -Nur partclone-0.2.24_/src/Makefile.am partclone-0.2.24/src/Makefile.am
+--- partclone-0.2.24_/src/Makefile.am	2011-05-24 02:47:18.000000000 +0000
++++ partclone-0.2.24/src/Makefile.am	2011-07-24 14:47:27.038818053 +0000
+@@ -63,7 +63,7 @@
+ sbin_PROGRAMS += partclone.ntfs
+ partclone_ntfs_SOURCES=main.c partclone.c progress.c ntfsclone-ng.c ntfsclone-ng.h partclone.h progress.h gettext.h
+ partclone_ntfs_CFLAGS=-DNTFS
+-partclone_ntfs_LDADD=-lntfs
++partclone_ntfs_LDADD=-lntfs-3g
+ sbin_PROGRAMS += partclone.ntfsfixboot
+ partclone_ntfsfixboot_SOURCES=ntfsfixboot.c
+ endif
+diff -Nur partclone-0.2.24_/src/ntfsclone-ng.c partclone-0.2.24/src/ntfsclone-ng.c
+--- partclone-0.2.24_/src/ntfsclone-ng.c	2011-05-24 02:47:18.000000000 +0000
++++ partclone-0.2.24/src/ntfsclone-ng.c	2011-07-24 14:47:27.038818053 +0000
+@@ -28,9 +28,9 @@
+ #define NTFS_DO_NOT_CHECK_ENDIANS
+ #define NTFS_MAX_CLUSTER_SIZE   65536
+ 
+-#include <ntfs/device.h>
+-#include <ntfs/volume.h>
+-#include <ntfs/bitmap.h>
++#include <ntfs-3g/device.h>
++#include <ntfs-3g/volume.h>
++#include <ntfs-3g/bitmap.h>
+ 
+ #include "partclone.h"
+ #include "ntfsclone-ng.h"
+@@ -79,7 +79,7 @@
+         return lut;
+ }
+ 
+-static s64 ntfs_attr_get_free_bits(ntfs_attr *na)
++static s64 ntfs_attr_get_free_bits0(ntfs_attr *na)
+ {
+         u8 *buf, *lut;
+         s64 br      = 0;
+@@ -162,11 +162,11 @@
+         }
+ 
+         // Initialize free clusters metric
+-        ntfs->nr_free_clusters = ntfs_attr_get_free_bits(ntfs->lcnbmp_na);
++        ntfs->free_clusters = ntfs_attr_get_free_bits0(ntfs->lcnbmp_na);
+ 
+-        if ( ntfs->nr_free_clusters < 0 || ntfs->nr_free_clusters >= ntfs->nr_clusters) {
++        if ( ntfs->free_clusters < 0 || ntfs->free_clusters >= ntfs->nr_clusters) {
+             log_mesg(0, 1, 1, fs_opt.debug, "%s: Bad number of free (%lld) or total (%lld) clusters!\n", __FILE__,
+-                ntfs->nr_free_clusters, ntfs->nr_clusters); 
++                ntfs->free_clusters, ntfs->nr_clusters); 
+         }
+ 
+         device_size = ntfs_device_size_get(ntfs->dev, 1);
+@@ -283,12 +283,12 @@
+     strncpy(image_hdr->fs, ntfs_MAGIC, FS_MAGIC_SIZE);
+     image_hdr->block_size  = (int)ntfs->cluster_size;
+     image_hdr->totalblock  = (unsigned long long)ntfs->nr_clusters;
+-    image_hdr->usedblocks  = (unsigned long long)(ntfs->nr_clusters - ntfs->nr_free_clusters);
++    image_hdr->usedblocks  = (unsigned long long)(ntfs->nr_clusters - ntfs->free_clusters);
+     image_hdr->device_size = (unsigned long long)ntfs_device_size_get(ntfs->dev, 1);
+     fs_close();
+ 
+     log_mesg(3, 0, 0, fs_opt.debug, "%s: hdr - usedblocks:\t: %llu\n", __FILE__, image_hdr->usedblocks);
+     log_mesg(3, 0, 0, fs_opt.debug, "%s: hdr - totalblocks:\t: %llu\n", __FILE__, image_hdr->totalblock);
+-    log_mesg(3, 0, 0, fs_opt.debug, "%s: ntfs - nr_free:\t: %lld\n", __FILE__, ntfs->nr_free_clusters);
++    log_mesg(3, 0, 0, fs_opt.debug, "%s: ntfs - nr_free:\t: %lld\n", __FILE__, ntfs->free_clusters);
+ }
+ 
+diff -Nur partclone-0.2.24_/src/progress.h partclone-0.2.24/src/progress.h
+--- partclone-0.2.24_/src/progress.h	2011-05-24 02:47:18.000000000 +0000
++++ partclone-0.2.24/src/progress.h	2011-07-24 14:47:27.038818053 +0000
+@@ -12,7 +12,6 @@
+  */
+ 
+ #include <stdio.h>
+-#include <time.h>
+ 
+ // progress display mode
+ #define TEXT 0
