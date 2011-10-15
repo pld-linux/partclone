@@ -1,12 +1,11 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.2.24
-Release:	3
+Version:	0.2.31
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	d2856820ed3f92e064fcbda3cd20f94e
-Patch0:         %{name}-ntfs-3g.patch
+# Source0-md5:	c4bd14a99e934422bce9ae929af9d43b
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -31,9 +30,7 @@ e2fslibs.
 
 %prep
 %setup -q
-%patch0 -p1
 
-sed -e 's|gcc -static|gcc|' -i configure.ac
 #sed -e 's|libxfs.h|xfs.h|' -i configure.ac -i src/xfsclone.[ch]
 sed -e 's|ncurses.h|ncurses/ncurses.h|' -i configure.ac -i src/{partclone,progress}.c
 
