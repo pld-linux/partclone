@@ -1,0 +1,11 @@
+--- partclone-0.2.56/configure.ac.wiget	2012-11-17 21:25:42.281686732 +0100
++++ partclone-0.2.56/configure.ac	2012-11-17 21:26:01.388352614 +0100
+@@ -1,7 +1,7 @@
+ AC_INIT([Partclone], [0.2.56], [thomas@nchc.org.tw])
+ #AC_CONFIG_AUX_DIR([build-aux])
+ #AC CONFIG SRCDIR([src/main.c])
+-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
++AM_INIT_AUTOMAKE([-Wall foreign])
+ AM_GNU_GETTEXT_VERSION([0.16.1])
+ AM_GNU_GETTEXT([external])
+ AC_PROG_CC

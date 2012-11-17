@@ -1,11 +1,12 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.2.33
-Release:	1
+Version:	0.2.56
+Release:	0.1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	65591745052f7537fd7f0e3181cdef82
+# Source0-md5:	75ee528b13f55feff80e09f74cf1da20
+Patch0:		am.patch
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -30,6 +31,7 @@ e2fslibs.
 
 %prep
 %setup -q
+%patch0 -p1
 
 #sed -e 's|libxfs.h|xfs.h|' -i configure.ac -i src/xfsclone.[ch]
 sed -e 's|ncurses.h|ncurses/ncurses.h|' -i configure.ac -i src/{partclone,progress}.c
@@ -66,6 +68,47 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README TODO src/gauge
-%attr(755,root,root) %{_sbindir}/%{name}.*
-%{_mandir}/man8/%{name}.*.8*
+%doc AUTHORS ChangeLog README TODO
+%attr(755,root,root) %{_sbindir}/partclone.btrfs
+%attr(755,root,root) %{_sbindir}/partclone.chkimg
+%attr(755,root,root) %{_sbindir}/partclone.dd
+%attr(755,root,root) %{_sbindir}/partclone.ext2
+%attr(755,root,root) %{_sbindir}/partclone.ext3
+%attr(755,root,root) %{_sbindir}/partclone.ext4
+%attr(755,root,root) %{_sbindir}/partclone.ext4dev
+%attr(755,root,root) %{_sbindir}/partclone.extfs
+%attr(755,root,root) %{_sbindir}/partclone.fat
+%attr(755,root,root) %{_sbindir}/partclone.fat12
+%attr(755,root,root) %{_sbindir}/partclone.fat16
+%attr(755,root,root) %{_sbindir}/partclone.fat32
+%attr(755,root,root) %{_sbindir}/partclone.hfs+
+%attr(755,root,root) %{_sbindir}/partclone.hfsp
+%attr(755,root,root) %{_sbindir}/partclone.hfsplus
+%attr(755,root,root) %{_sbindir}/partclone.info
+%attr(755,root,root) %{_sbindir}/partclone.ntfs
+%attr(755,root,root) %{_sbindir}/partclone.ntfsfixboot
+%attr(755,root,root) %{_sbindir}/partclone.ntfsreloc
+%attr(755,root,root) %{_sbindir}/partclone.restore
+%attr(755,root,root) %{_sbindir}/partclone.vfat
+%{_mandir}/man8/partclone.8*
+%{_mandir}/man8/partclone.btrfs.8*
+%{_mandir}/man8/partclone.chkimg.8*
+%{_mandir}/man8/partclone.dd.8*
+%{_mandir}/man8/partclone.ext2.8*
+%{_mandir}/man8/partclone.ext3.8*
+%{_mandir}/man8/partclone.ext4.8*
+%{_mandir}/man8/partclone.ext4dev.8*
+%{_mandir}/man8/partclone.extfs.8*
+%{_mandir}/man8/partclone.fat.8*
+%{_mandir}/man8/partclone.fat12.8*
+%{_mandir}/man8/partclone.fat16.8*
+%{_mandir}/man8/partclone.fat32.8*
+%{_mandir}/man8/partclone.hfs+.8*
+%{_mandir}/man8/partclone.hfsp.8*
+%{_mandir}/man8/partclone.hfsplus.8*
+%{_mandir}/man8/partclone.info.8*
+%{_mandir}/man8/partclone.ntfs.8*
+%{_mandir}/man8/partclone.ntfsfixboot.8*
+%{_mandir}/man8/partclone.ntfsreloc.8*
+%{_mandir}/man8/partclone.restore.8*
+%{_mandir}/man8/partclone.vfat.8*
