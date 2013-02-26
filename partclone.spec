@@ -1,11 +1,11 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.2.48
+Version:	0.2.58
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	279a575181a35bc50373702516d04b3b
+# Source0-md5:	8d8edeab8a0ce430d2e00efcc25f4ce7
 Patch0:		automake.patch
 URL:		http://partclone.org/
 BuildRequires:	autoconf
@@ -107,4 +107,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/partclone.ntfs.8*
 %{_mandir}/man8/partclone.restore.8*
 %{_mandir}/man8/partclone.vfat.8*
-%{_mandir}/man8/partclone.xxxfs.8*
+%{_mandir}/man8/partclone.8.*
+%{_mandir}/man8/partclone.fat.8*
+%{_mandir}/man8/partclone.hfsp.8*
+%{_mandir}/man8/partclone.ntfsfixboot.8*
+%{_mandir}/man8/partclone.ntfsreloc.8*
