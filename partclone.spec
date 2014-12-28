@@ -11,7 +11,7 @@ URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	e2fsprogs-devel
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	libuuid-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	ntfs-3g-devel
