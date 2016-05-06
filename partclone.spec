@@ -1,12 +1,11 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.2.58
-Release:	4
+Version:	0.2.88
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	8d8edeab8a0ce430d2e00efcc25f4ce7
-Patch0:		automake.patch
+# Source0-md5:	fdf2b91ae0470c4a4463edd97b39357a
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -31,7 +30,6 @@ e2fslibs.
 
 %prep
 %setup -q
-%patch0 -p1
 
 #sed -e 's|libxfs.h|xfs.h|' -i configure.ac -i src/xfsclone.[ch]
 sed -e 's|ncurses.h|ncurses/ncurses.h|' -i configure.ac -i src/{partclone,progress}.c
@@ -68,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README TODO
+%doc AUTHORS ChangeLog README.md TODO
 %attr(755,root,root) %{_sbindir}/partclone.btrfs
 %attr(755,root,root) %{_sbindir}/partclone.chkimg
 %attr(755,root,root) %{_sbindir}/partclone.dd
@@ -84,6 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/partclone.hfs+
 %attr(755,root,root) %{_sbindir}/partclone.hfsp
 %attr(755,root,root) %{_sbindir}/partclone.hfsplus
+%attr(755,root,root) %{_sbindir}/partclone.imager
 %attr(755,root,root) %{_sbindir}/partclone.info
 %attr(755,root,root) %{_sbindir}/partclone.ntfs
 %attr(755,root,root) %{_sbindir}/partclone.ntfsfixboot
@@ -103,6 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/partclone.fat32.8*
 %{_mandir}/man8/partclone.hfs+.8*
 %{_mandir}/man8/partclone.hfsplus.8*
+%{_mandir}/man8/partclone.imager.8*
 %{_mandir}/man8/partclone.info.8*
 %{_mandir}/man8/partclone.ntfs.8*
 %{_mandir}/man8/partclone.restore.8*
@@ -112,3 +112,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/partclone.hfsp.8*
 %{_mandir}/man8/partclone.ntfsfixboot.8*
 %{_mandir}/man8/partclone.ntfsreloc.8*
+%{_datadir}/%{name}
