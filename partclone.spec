@@ -1,23 +1,26 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.2.88
-Release:	2
+Version:	0.3.19
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
-Source0:	http://downloads.sourceforge.net/partclone/%{name}-%{version}.tar.gz
-# Source0-md5:	fdf2b91ae0470c4a4463edd97b39357a
+Source0:	https://github.com/Thomas-Tsai/partclone/archive/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	c4e469396a402810f97370fbfa462934
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	gettext-tools
+BuildRequires:	libfuse-devel
 BuildRequires:	libuuid-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	ntfs-3g-devel
-BuildRequires:	pkgconfig >= 0.9.0
+BuildRequires:	openssl-devel >= 1.1.0
+BuildRequires:	pkgconfig >= 1:0.9.0
 #BuildRequires:	progsreiserfs-devel
 #BuildRequires:	reiser4progs-devel
 #BuildRequires:	xfsprogs-devel
+Requires:	openssl >= 1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -38,6 +41,8 @@ mv po/fr_FR.gmo po/fr.gmo
 mv po/fr_FR.po po/fr.po
 sed -i 's/fr_FR/fr/' po/LINGUAS
 
+sed -e 's/exit 1/exit 0/' -i fail-mbr/compile-mbr.sh
+
 %build
 %{__aclocal}
 %{__autoconf}
@@ -45,7 +50,9 @@ sed -i 's/fr_FR/fr/' po/LINGUAS
 %{__automake}
 export LIBS=-ltinfo
 %configure \
+	--enable-apfs \
 	--enable-extfs \
+	--enable-fuse \
 	--enable-hfsp \
 	--enable-fat \
 	--enable-ntfs \
@@ -67,6 +74,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README.md TODO
+%attr(755,root,root) %{_sbindir}/partclone.apfs
 %attr(755,root,root) %{_sbindir}/partclone.btrfs
 %attr(755,root,root) %{_sbindir}/partclone.chkimg
 %attr(755,root,root) %{_sbindir}/partclone.dd
@@ -83,6 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/partclone.hfsp
 %attr(755,root,root) %{_sbindir}/partclone.hfsplus
 %attr(755,root,root) %{_sbindir}/partclone.imager
+%attr(755,root,root) %{_sbindir}/partclone.imgfuse
 %attr(755,root,root) %{_sbindir}/partclone.info
 %attr(755,root,root) %{_sbindir}/partclone.ntfs
 %attr(755,root,root) %{_sbindir}/partclone.ntfsfixboot
