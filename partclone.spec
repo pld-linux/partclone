@@ -1,11 +1,11 @@
 Summary:	Utility to clone and restore partitions
 Name:		partclone
-Version:	0.3.19
+Version:	0.3.23
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://github.com/Thomas-Tsai/partclone/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c4e469396a402810f97370fbfa462934
+# Source0-md5:	157dc2e5e1b8574d4ece35528b8eacb6
 URL:		http://partclone.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -40,8 +40,6 @@ sed -e 's|ncurses.h|ncurses/ncurses.h|' -i configure.ac -i src/{partclone,progre
 mv po/fr_FR.gmo po/fr.gmo
 mv po/fr_FR.po po/fr.po
 sed -i 's/fr_FR/fr/' po/LINGUAS
-
-sed -e 's/exit 1/exit 0/' -i fail-mbr/compile-mbr.sh
 
 %build
 %{__aclocal}
